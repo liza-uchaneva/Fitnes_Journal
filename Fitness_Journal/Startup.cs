@@ -1,4 +1,8 @@
-﻿namespace Fitness_Journal
+﻿using Fitness_Journal.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace Fitness_Journal
 {
     public class Startup
     {
@@ -17,6 +21,13 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("AppDb"));
+            services.AddAuthorization();
+
+            services.AddIdentityApiEndpoints<IdentityUser>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+
             //string conn = Configuration.GetConnectionString("ApplicationTable");
             //services.AddDbContext<ApplicationsContext>(opt => opt.UseSqlServer(conn));
         }
@@ -26,6 +37,7 @@
         {
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
