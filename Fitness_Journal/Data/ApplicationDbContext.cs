@@ -8,7 +8,7 @@ namespace Fitness_Journal.Data
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
-    base(options)
-        { }
+        base(options)
+            { }
     }
 }
