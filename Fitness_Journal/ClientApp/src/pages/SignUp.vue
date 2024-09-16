@@ -1,13 +1,13 @@
 <template>
-    <Login />
+    <SignUp />
 </template>
 
 <script>
-    import Login from "";
+    import SignUp from "../components/SignUp.vue";
 
     export default {
         components: {
-            Login,
+            SignUp,
         },
     };
 </script>

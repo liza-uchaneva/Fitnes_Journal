@@ -1,7 +1,7 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <form @submit.prevent="onSend">
-        <h3 class="form__title">Login</h3>
+    <form @submit.prevent="register">
+        <h3 class="form__title">Create account</h3>
+
         <div class="form__input_box">
             <label class="form__label">Email</label>
             <input v-model.trim="user.email"
@@ -15,6 +15,7 @@
                 *{{ err.$message }}
             </p>
         </div>
+
         <div class="form__input_box">
             <label class="form__label">Password</label>
             <input v-model.trim="user.password"
@@ -28,17 +29,33 @@
                 *{{ err.$message }}
             </p>
         </div>
+
+        <div class="form__input_box">
+            <label class="form__label">Confirm password</label>
+            <input v-model.trim="user.confirm_password"
+                   :class="{ 'form__input_hasError': (v$.confirm_password.$invalid && v$.confirm_password.$dirty) }"
+                   class="form__input"
+                   type="password"
+                   name="confirm_password" />
+            <p class="form__error_message"
+               v-for="err in v$.confirm_password.$errors"
+               :key="err.$uid">
+                *{{ err.$message }}
+            </p>
+        </div>
+
         <button type="submit" class="form__button">Submit</button>
     </form>
+
     <div>
-        Don't have an account? <router-link to="/signup">Sign up here</router-link>
+        Already have an account? <router-link to="/">Log in here</router-link>
     </div>
 </template>
 
 <script>
     import axios from 'axios';
     import { reactive, computed } from 'vue';
-    import { email, required } from '@vuelidate/validators';
+    import { email, required, sameAs, minLength } from '@vuelidate/validators';
     import { useVuelidate } from '@vuelidate/core';
 
     export default {
@@ -46,11 +63,13 @@
             const user = reactive({
                 email: '',
                 password: '',
+                confirm_password: '',
             });
 
             const rules = computed(() => ({
                 email: { required, email },
-                password: { required },
+                password: { required, minLength: minLength(6) },
+                confirm_password: { required, sameAs: sameAs(user.password) },
             }));
 
             const v$ = useVuelidate(rules, user);
@@ -60,10 +79,11 @@
             const resetForm = () => {
                 user.email = '';
                 user.password = '';
+                user.confirm_password = '';
             };
 
             return {
-                user,
+                user, 
                 v$,
                 visible,
                 resetForm,
@@ -71,11 +91,11 @@
         },
 
         methods: {
-            async onSend() {
+            async register() {
                 this.v$.$touch();
                 if (!this.v$.$invalid) {
                     try {
-                        await axios.post('api/login', {
+                        await axios.post('api/register', {
                             email: this.user.email,
                             password: this.user.password,
                         });
@@ -90,4 +110,3 @@
         }
     };
 </script>
-
