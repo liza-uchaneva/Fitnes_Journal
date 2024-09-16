@@ -22,14 +22,14 @@ namespace Fitness_Journal
         {
             services.AddControllers();
 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("AppDb"));
             services.AddAuthorization();
+            var connectionString = Configuration.GetConnectionString("FitnessJournalAuthConnection")
+            ?? throw new InvalidOperationException("Connection string 'FitnessJournalAuthConnection' not found.");
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddIdentityApiEndpoints<IdentityUser>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            //string conn = Configuration.GetConnectionString("ApplicationTable");
-            //services.AddDbContext<ApplicationsContext>(opt => opt.UseSqlServer(conn));
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                   .AddEntityFrameworkStores<ApplicationDbContext>()
+                   .AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
