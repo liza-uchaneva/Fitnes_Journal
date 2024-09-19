@@ -28,6 +28,8 @@
   <ItemGroup>
     <Folder Include="ClientApp\src\assets\" />
     <Folder Include="ClientApp\src\router\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

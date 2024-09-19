@@ -1,5 +1,6 @@
 ﻿using Fitness_Journal.Data;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fitness_Journal
@@ -22,14 +23,16 @@ namespace Fitness_Journal
         {
             services.AddControllers();
 
-            services.AddAuthorization();
-            var connectionString = Configuration.GetConnectionString("FitnessJournalAuthConnection")
-            ?? throw new InvalidOperationException("Connection string 'FitnessJournalAuthConnection' not found.");
+            services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+            services.AddAuthorizationBuilder();
+
+            var connectionString = Configuration.GetConnectionString("FitnessJournalConnection")
+            ?? throw new InvalidOperationException("Connection string 'FitnessJournalConnection' not found.");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentityCore<User>()
                    .AddEntityFrameworkStores<ApplicationDbContext>()
-                   .AddDefaultTokenProviders();
+                   .AddApiEndpoints();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,12 +40,11 @@ namespace Fitness_Journal
         {
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapIdentityApi<User>();
+                endpoints.MapGet("/", (ClaimsPrincipal user) => $"Hello {user.Identity!.Name}")
+                         .RequireAuthorization();
                 endpoints.MapFallbackToFile("index.html");
             });
         }

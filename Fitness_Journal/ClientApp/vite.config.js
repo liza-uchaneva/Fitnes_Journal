@@ -8,15 +8,15 @@ import { resolve } from 'path'
 export default defineConfig({
     plugins: [vue(), mkcert()],
     server: {
-        port: 3399,
         https: true,
+        port: 3399,
         strictPort: true,
         proxy: {
             '/api': {
                 target: 'http://localhost:7153',
                 changeOrigin: true,
                 secure: false,
-                rewrite: (path) => path.replace(/^\/api/, '/api')
+                rewrite: (path) => path.replace(/^\/api/, '')
             }
         }
     },
