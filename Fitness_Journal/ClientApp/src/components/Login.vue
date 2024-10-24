@@ -3,7 +3,7 @@
     <form @submit.prevent="onSend">
         <h3 class="form__title">Login</h3>
         <div class="form__input_box">
-            <label class="form__label">Email</label>
+            <label class="form__label">Email </label>
             <input v-model.trim="user.email"
                    :class="{ 'form__input_hasError': (v$.email.$invalid && v$.email.$dirty) }"
                    class="form__input"
@@ -16,7 +16,7 @@
             </p>
         </div>
         <div class="form__input_box">
-            <label class="form__label">Password</label>
+            <label class="form__label">Password </label>
             <input v-model.trim="user.password"
                    :class="{ 'form__input_hasError': (v$.password.$invalid && v$.password.$dirty) }"
                    class="form__input"
@@ -38,7 +38,7 @@
 <script>
     import axios from 'axios';
     import { reactive, computed } from 'vue';
-    import { email, required } from '@vuelidate/validators';
+    import { email, required, maxLength } from '@vuelidate/validators';
     import { useVuelidate } from '@vuelidate/core';
 
     export default {
@@ -50,7 +50,7 @@
 
             const rules = computed(() => ({
                 email: { required, email },
-                password: { required },
+                password: { required, maxLength }
             }));
 
             const v$ = useVuelidate(rules, user);
@@ -61,8 +61,9 @@
                 user.email = '';
                 user.password = '';
             };
-
+            const mes = "The password must be at least six characters long and contain at least one of each of the following characters: \br  - Uppercase letter \br  - Lowercase letter \br - Numeric digit \br - Nonalphanumeric character";
             return {
+                mes,
                 user,
                 v$,
                 visible,
@@ -75,12 +76,16 @@
                 this.v$.$touch();
                 if (!this.v$.$invalid) {
                     try {
-                        await axios.post('api/login', {
+                       const responce = await axios.post('api/login', {
                             email: this.user.email,
                             password: this.user.password,
                         });
+                        localStorage.setItem('accessToken', responce.data.accessToken);
+
+                        this.$router.replace({ path: '/home' });
                     } catch (error) {
-                        console.error('Error:', error.response);
+                        const er = error.response + this.mes;
+                        console.error('Error:', er);
                     }
                     this.visible.value = true;
                     this.resetForm();
