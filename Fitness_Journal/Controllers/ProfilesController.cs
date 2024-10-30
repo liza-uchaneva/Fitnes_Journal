@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Fitness_Journal.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fitness_Journal.Controllers
 {
@@ -20,6 +21,7 @@ namespace Fitness_Journal.Controllers
             _context = context;
         }
         // GET: api/Profiles/{profileId}/Workouts
+        [Authorize]
         [HttpGet("{profileId}/Workouts")]
         public async Task<ActionResult<IEnumerable<DateTime>>> GetWorkouts(int profileId)
         {
@@ -37,56 +39,26 @@ namespace Fitness_Journal.Controllers
             return workoutsDtaTime;
         }
 
-        // GET: api/Profiles
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles()
+        // POST: api/Profile/Workouts
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<Profile>> PostWorkout(DateTime workoutDateTime, int profileId)
         {
-            return await _context.Profiles.ToListAsync();
-        }
-
-        // GET: api/Profiles/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Profile>> GetProfile(int id)
-        {
-            var profile = await _context.Profiles.FindAsync(id);
-
+            var profile = _context.Profiles.FirstOrDefault(p => p.ProfileId == profileId);
             if (profile == null)
             {
                 return NotFound();
             }
 
-            return profile;
-        }
+            _context.Workouts.Add(new Workout {
+                ProfileId = profileId,
+                WorkoutDateTime = workoutDateTime,
+                Profile = profile,
+            });
+            await _context.SaveChangesAsync();
 
-        // PUT: api/Profiles/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProfile(int id, Profile profile)
-        {
-            if (id != profile.ProfileId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(profile).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProfileExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return CreatedAtAction("GetProfile", new { id = profile.ProfileId }, profile);
         }
 
         // POST: api/Profiles
