@@ -20,59 +20,22 @@ namespace Fitness_Journal.Controllers
         {
             _context = context;
         }
-        // GET: api/Profiles/{profileId}/Workouts
-        [Authorize]
-        [HttpGet("{profileId}/Workouts")]
-        public async Task<ActionResult<IEnumerable<DateTime>>> GetWorkouts(int profileId)
-        {
-            // Retrieve the profile along with its workouts
-            var workoutsDtaTime = await _context.Workouts
-                                        .Where(p => p.ProfileId == profileId)
-                                        .Select(w=> w.WorkoutDateTime)
-                                        .ToListAsync();
-
-            if (workoutsDtaTime.Count == 0)
-            {
-                return NotFound(new { Message = "No workouts were found" });
-            }
-
-            return workoutsDtaTime;
-        }
-
-        // POST: api/Profile/Workouts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Authorize]
-        [HttpPost]
-        public async Task<ActionResult<Profile>> PostWorkout(DateTime workoutDateTime, int profileId)
-        {
-            var profile = _context.Profiles.FirstOrDefault(p => p.ProfileId == profileId);
-            if (profile == null)
-            {
-                return NotFound();
-            }
-
-            _context.Workouts.Add(new Workout {
-                ProfileId = profileId,
-                WorkoutDateTime = workoutDateTime,
-                Profile = profile,
-            });
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProfile", new { id = profile.ProfileId }, profile);
-        }
 
         // POST: api/Profiles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Profile>> PostProfile(Profile profile)
+        public async Task<ActionResult<Profile>> PostProfile()
         {
+            var profile = new Profile();
             _context.Profiles.Add(profile);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProfile", new { id = profile.ProfileId }, profile);
+            var result = new ProfileCreateResult() { ProfiletId = profile.ProfileId };
+            return CreatedAtAction("GetProfile", result);
         }
 
         // DELETE: api/Profiles/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProfile(int id)
         {
@@ -88,9 +51,10 @@ namespace Fitness_Journal.Controllers
             return NoContent();
         }
 
-        private bool ProfileExists(int id)
-        {
-            return _context.Profiles.Any(e => e.ProfileId == id);
-        }
+    }
+
+    public class ProfileCreateResult
+    {
+        public int ProfiletId { get; set; }
     }
 }

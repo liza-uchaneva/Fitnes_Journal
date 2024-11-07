@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <button @click="addWorkout">Add workout</button>
+    <button @click="AddWorkout">Add workout</button>
 </template>
 
 <script>
@@ -40,16 +40,15 @@
 
         methods: {
             isToday(day) {
-                return day.isSame(dayjs(), 'day'); // Check if the day is today
+                return day.isSame(dayjs(), 'day');
             },
             getCurrentWeek() {
                 const today = dayjs();
-                const startOfWeek = today.startOf('week').day(0); // Sunday as the start
+                const startOfWeek = today.startOf('week').day(0);
                 this.currentWeek = Array.from({ length: 7 }, (_, i) =>
                     startOfWeek.add(i, 'day')
                 );
 
-                // Set the month name as the title (e.g., October)
                 this.monthTitle = today.format('MMMM');
             },
            
@@ -85,7 +84,10 @@
                     });
 
                     if (response.ok) {
-                        const data = await response.json();
+                        const responseText = await response.text();
+                        console.log('Raw response text:', responseText);
+
+                        const data = JSON.parse(responseText);
                         console.log('Workouts:', data);
 
                         this.workoutsd = data;
@@ -96,7 +98,32 @@
                     console.error('Error:', error);
                 }
             },
-            
+            async AddWorkout() {
+                try {
+                    const response = await fetch(`/${this.profileId}/workouts`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            ProfileId: this.profileId,
+                            WorkoutDateTime: dayjs().toISOString()
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response;
+                        console.log('WorkoutId:', data);
+                        loadWorkouts();
+                    } else {
+                        console.error('Failed to post workout:', response.statusText);
+                    }
+                }
+                catch (error) {
+                    console.error('Error:', error);
+                }
+            },
         }
     };
 </script>
