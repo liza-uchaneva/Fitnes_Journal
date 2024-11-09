@@ -15,4 +15,15 @@ namespace Fitness_Journal.Data
 
         public DateTime WorkoutDateTime { get; set; }
     }
+    public class CreateWorkoutModel
+    {
+        public int ProfileId { get; set; }
+        public DateTime WorkoutDateTime { get; set; }
+    }
+
+    public class WorkoutCreateResult
+    {
+        public int WorkoutId { get; set; }
+        public DateTime WorkoutDateTime { get; set; }
+    }
 }

@@ -2,6 +2,9 @@
     <div>
         {{ profileId }}
     </div>
+    <div>
+        {{ workouts }}
+    </div>
 
     <div class="calendar-week">
         <h2>{{ monthTitle }}</h2>
@@ -20,7 +23,7 @@
 
 <script>
     import axios from 'axios';
-    import Day from './Day.vue';
+    //import Day from './Day.vue';
     import dayjs from 'dayjs';
 
     export default {
@@ -68,6 +71,9 @@
                         this.profileId = data;
                     } else {
                         console.error('Failed to fetch profile:', response.statusText);
+                        if (response.statusText == "Unauthorized") {
+                            this.$router.replace({ path: '/' });
+                        }
                     }
                 } catch (error) {
                     console.error('Error:', error);
@@ -76,7 +82,7 @@
 
             async loadWorkouts() {
                 try {
-                    const response = await fetch(`/${this.profileId}/workouts`, {
+                    const response = await fetch(`/api/user/workouts`, {
                         method: 'GET',
                         headers: {
                             'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
@@ -90,7 +96,7 @@
                         const data = JSON.parse(responseText);
                         console.log('Workouts:', data);
 
-                        this.workoutsd = data;
+                        this.workouts = data;
                     } else {
                         console.error('Failed to fetch workouts:', response.statusText);
                     }
@@ -98,27 +104,27 @@
                     console.error('Error:', error);
                 }
             },
+
             async AddWorkout() {
                 try {
-                    const response = await fetch(`/${this.profileId}/workouts`, {
-                        method: 'POST',
+                    const config = {
                         headers: {
                             'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
                             'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            ProfileId: this.profileId,
-                            WorkoutDateTime: dayjs().toISOString()
-                        })
-                    });
+                        }
+                    };
 
-                    if (response.ok) {
-                        const data = await response;
-                        console.log('WorkoutId:', data);
-                        loadWorkouts();
-                    } else {
-                        console.error('Failed to post workout:', response.statusText);
-                    }
+                    const bodyParameters = {
+                        WorkoutDateTime: dayjs().toISOString()
+                    };
+
+                    const response = await axios.post(
+                        `/api/user/workout`,
+                        bodyParameters,
+                        config
+                    );
+                    console.log('WorkoutId:', response);
+                    this.loadWorkouts();
                 }
                 catch (error) {
                     console.error('Error:', error);

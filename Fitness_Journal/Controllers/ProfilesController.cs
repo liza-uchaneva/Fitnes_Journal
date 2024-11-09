@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Fitness_Journal.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace Fitness_Journal.Controllers
 {
@@ -24,7 +25,7 @@ namespace Fitness_Journal.Controllers
         // POST: api/Profiles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
-        [HttpPost]
+        [HttpPost("/profile")]
         public async Task<ActionResult<Profile>> PostProfile()
         {
             var profile = new Profile();
@@ -46,7 +47,7 @@ namespace Fitness_Journal.Controllers
             }
 
             _context.Profiles.Remove(profile);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); 
 
             return NoContent();
         }
