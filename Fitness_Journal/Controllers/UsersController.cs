@@ -54,19 +54,9 @@ namespace Fitness_Journal.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPost("/user/workout")]
-        public async Task<ActionResult<WorkoutCreateResult>> PostWorkout(DateTime workoutDateTime)
+        public async Task<ActionResult<WorkoutCreateResult>> PostWorkout(CreateWorkoutModel createWorkoutModel)
         {
-            var IdentUser = await _userManager.GetUserAsync(User);
-            if (IdentUser == null) return NotFound("User id not found.");
-            var user = _context.Users.FirstOrDefault(u => u.Email == IdentUser.Email);
-            if (user == null) return NotFound("Profile not found.");
-            var profileId = user.ProfileId;
-
-            var workoutmodel = new CreateWorkoutModel()
-            {
-                ProfileId = profileId,
-                WorkoutDateTime = workoutDateTime
-            };
+            var workoutmodel = createWorkoutModel;
 
             var profile = await _context.Profiles.FindAsync(workoutmodel.ProfileId);
             if (profile == null)
