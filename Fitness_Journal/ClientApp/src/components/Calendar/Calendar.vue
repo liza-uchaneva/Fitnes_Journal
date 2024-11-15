@@ -2,10 +2,11 @@
     <div>
         {{ profileId }}
     </div>
-    <div>
-        {{ workouts }}
-    </div>
+    <div class="progress-container">
+        <span>{{ weekProgress }} / {{ goal }}</span>
 
+        <progress id="bar" :max="goal" :value="weekProgress"></progress>
+    </div>
     <div class="calendar-week">
         <h2>{{ monthTitle }}</h2>
         <div class="calendar-days">
@@ -13,6 +14,7 @@
                  :key="index"
                  class="calendar-day"
                  :class="{
+                    'current-day': isToday(day),
                     'current-day': isToday(day),
                     'workout-day': isWorkoutDay(day),
                     'selected-day': day.isSame(selectedDay, 'day')
@@ -35,9 +37,12 @@
             return {
                 profileId: null,
                 workouts: [],
+                checkedDays: [],
                 currentWeek: [],
-                monthTitle: '',
                 selectedDay: null,
+                goal: 7,
+                weekProgress: 0,
+                monthTitle:'',
             };
         },
         async mounted() {
@@ -46,17 +51,26 @@
             this.getCurrentWeek();
         },
         methods: {
+
             isToday(day) {
                 return day.isSame(dayjs(), 'day');
             },
+
             isWorkoutDay(day) {
-                return this.workouts.some(workout =>
+                const res = this.workouts.some(workout =>
                     day.isSame(dayjs(workout), 'day')
                 );
+                if (res && !this.checkedDays.includes(day.format('YYYY-MM-DD'))) {
+                    this.weekProgress++;
+                    this.checkedDays.push(day.format('YYYY-MM-DD'));
+                }
+                return res;
             },
+
             selectDay(day) {
                 this.selectedDay = day;
             },
+
             getCurrentWeek() {
                 const today = dayjs();
                 const startOfWeek = today.startOf('week').day(0);
@@ -66,6 +80,7 @@
 
                 this.monthTitle = today.format('MMMM');
             },
+
             async getProfileId() {
                 try {
                     const response = await fetch(`/api/user/profileId`, {
@@ -88,6 +103,7 @@
                     console.error('Error:', error);
                 }
             },
+
             async loadWorkouts() {
                 try {
                     const response = await fetch(`/api/user/workouts`, {
@@ -108,6 +124,7 @@
                     console.error('Error:', error);
                 }
             },
+
             async AddWorkout() {
                 try {
                     const config = {
@@ -124,6 +141,7 @@
 
                     const response = await axios.post(`/api/user/workout`, bodyParameters, config);
                     this.loadWorkouts();
+                    this.weekProgress++;
                 } catch (error) {
                     console.error('Error:', error);
                 }
@@ -158,14 +176,44 @@
         font-weight: bold;
         border: 2px solid black;
     }
-
+    g
     .workout-day {
-        background-color: #ffcccb;
+        background-color: #F1F1F9;
     }
 
     .selected-day {
         border: 2px solid blue;
     }
+    .progress-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    progress {
+        width: 100%;
+        height: 20px;
+        appearance: none;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+        progress::-webkit-progress-bar {
+            background-color: #f3f3f3;
+            border-radius: 5px;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: #4caf50;
+            border-radius: 5px;
+        }
+
+        progress::-moz-progress-bar {
+            background-color: #4caf50;
+            border-radius: 5px;
+        }
 </style>
 
 
