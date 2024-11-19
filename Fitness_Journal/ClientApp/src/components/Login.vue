@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <form @submit.prevent="onSend">
-        <h3 class="form__title">Login</h3>
+        <h3 class="form__title">Welcome back</h3>
         <div class="form__input_box">
             <label class="form__label">Email </label>
             <input v-model.trim="user.email"
@@ -31,7 +31,7 @@
         <button type="submit" class="form__button">Submit</button>
     </form>
     <div>
-        Don't have an account? <router-link to="/signup">Sign up here</router-link>
+        New to us? <router-link to="/signup">Sign up</router-link> now
     </div>
 </template>
 

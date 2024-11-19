@@ -9,11 +9,18 @@ namespace Fitness_Journal.Data
     {
         [Key]
         public int ProfileId { get; set; }
-
+        public int? WeeklyGoal { get; set; }
         public List<Workout> Workouts { get; set; }
+
         public Profile()
         {
             Workouts = new List<Workout>();
         }
+    }
+    public class CreateProfileWeeklyGoal()
+    {
+        public int ProfileId { get; set; }
+        public int? WeeklyGoal { get; set; }
+
     }
 }

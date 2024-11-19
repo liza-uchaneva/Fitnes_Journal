@@ -22,7 +22,7 @@ namespace Fitness_Journal.Controllers
             _context = context;
         }
 
-        // POST: api/Profiles
+        // POST: api/Profile
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPost("/profile")]

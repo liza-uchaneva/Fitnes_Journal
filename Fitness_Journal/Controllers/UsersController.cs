@@ -28,7 +28,7 @@ namespace Fitness_Journal.Controllers
         // GET: api/user/profileId
         [Authorize]
         [HttpGet("/user/profileId")]
-        public async Task<ActionResult<int>> GetProfileIdFromUser()
+        public async Task<ActionResult<int>> GetProfileId()
         {
             var IdentUser = await _userManager.GetUserAsync(User);
             if (IdentUser != null)
@@ -48,6 +48,39 @@ namespace Fitness_Journal.Controllers
             {
                 return NotFound("Profile id not found.");
             }
+        }
+
+        // GET: api/user/weeklygoal
+        [Authorize]
+        [HttpGet("/user/weeklygoal")]
+        public async Task<ActionResult<int>> GetWeeklyGoal()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound("User id not found.");
+
+            var profile = _context.Profiles.FirstOrDefault(p => p.ProfileId == user.ProfileId);
+            if (profile == null) return NotFound("Profile not found.");
+
+            return Ok(profile.WeeklyGoal);
+        }
+
+        // POST: api/user/weeklygoal
+        [Authorize]
+        [HttpPost("/user/setweeklygoal")]
+        public async Task<IActionResult> PostWeeklyGoal(CreateProfileWeeklyGoal createProfileWeeklyGoal)
+        {
+            var profile = _context.Profiles.FirstOrDefault(p => p.ProfileId == createProfileWeeklyGoal.ProfileId);
+            if (profile == null) return NotFound("Profile not found.");
+
+            profile.WeeklyGoal = createProfileWeeklyGoal.WeeklyGoal;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                ProfileId = profile.ProfileId,
+                Goal = profile.WeeklyGoal
+            });
         }
 
         // POST: api/user/workout

@@ -49,6 +49,7 @@
             await this.getProfileId();
             await this.loadWorkouts();
             this.getCurrentWeek();
+            this.getWeeklyGoal();
         },
         methods: {
 
@@ -68,7 +69,10 @@
             },
 
             selectDay(day) {
-                this.selectedDay = day;
+                if (day <= dayjs())
+                {
+                    this.selectedDay = day;
+                }
             },
 
             getCurrentWeek() {
@@ -92,7 +96,8 @@
 
                     if (response.ok) {
                         const data = await response.json();
-                        this.profileId = data;
+                        localStorage.setItem('profileId', data);
+
                     } else {
                         console.error('Failed to fetch profile:', response.statusText);
                         if (response.statusText === 'Unauthorized') {
@@ -103,7 +108,32 @@
                     console.error('Error:', error);
                 }
             },
+            async getWeeklyGoal() {
+                try {
+                    const response = await fetch(`/api/user/weeklygoal`, {
+                        method: 'GET',
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+                        },
+                    });
 
+                    if (response.ok) {
+                        if (response.status == 204) this.$router.replace({ path: '/personal_info' });
+
+                        const data = await response.json();
+                        this.goal = data;
+                        if (data == 0) this.$router.replace({ path: '/personal_info' });
+
+                    } else {
+                        console.error('Failed to fetch weekly goal:', response.statusText);
+                        if (response.statusText === 'Unauthorized') {
+                            this.$router.replace({ path: '/' });
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            },
             async loadWorkouts() {
                 try {
                     const response = await fetch(`/api/user/workouts`, {
@@ -135,13 +165,12 @@
                     };
 
                     const bodyParameters = {
-                        profileId: this.profileId,
+                        profileId: localStorage.getItem('profileId'),
                         workoutDateTime: this.selectedDay,
                     };
 
                     const response = await axios.post(`/api/user/workout`, bodyParameters, config);
                     this.loadWorkouts();
-                    this.weekProgress++;
                 } catch (error) {
                     console.error('Error:', error);
                 }
@@ -176,7 +205,7 @@
         font-weight: bold;
         border: 2px solid black;
     }
-    g
+    
     .workout-day {
         background-color: #F1F1F9;
     }
