@@ -32,3 +32,6 @@ _ReSharper*/
 #Nuget packages folder
 packages/
 bin/
+/.idea/.idea.Fitness_Journal/.idea/.gitignore
+/.idea/.idea.Fitness_Journal/.idea/indexLayout.xml
+/.idea/.idea.Fitness_Journal/.idea/vcs.xml
