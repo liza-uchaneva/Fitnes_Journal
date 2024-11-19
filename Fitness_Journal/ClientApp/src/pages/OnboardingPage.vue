@@ -1,13 +1,13 @@
 <template>
-  <Login />
+  <Onboarding />
 </template>
 
 <script>
-import Login from "../components/Login.vue";
+import Onboarding from "@/components/Onboarding.vue";
 
 export default {
   components: {
-    Login,
+    Onboarding,
   },
 };
 </script>

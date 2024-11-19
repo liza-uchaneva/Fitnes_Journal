@@ -1,10 +1,16 @@
 .login {
   background-image: url(../picture/Fon.webp);
-  display: flex;
-  flex-direction: column;
+  @include flexColumnCenter(0);
   &__img {
     z-index: 10;
     margin-bottom: 10px;
+  }
+  &__text {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 123%;
+    letter-spacing: 0.02em;
+    color: $colorTextMain;
   }
 }
 
@@ -20,9 +26,19 @@
   }
   &__input {
     margin-bottom: 33px;
+    border: none;
+    border-bottom: 1px solid $colorTextMain;
+    width: 100%;
+    padding: 5px;
   }
+  &__input::placeholder {
+    color: $colorTextMain;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
   &__button {
-    border: 1px solid $colorBlack;
+    border: 1px solid $colorTextMain;
     border-radius: 32px;
     padding: 16px 111.5px;
     background-color: $colorPink;

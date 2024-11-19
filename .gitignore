@@ -32,3 +32,10 @@ _ReSharper*/
 #Nuget packages folder
 packages/
 bin/
+/Fitness_Journal/ClientApp/package-lock.json
+/package-lock.json
+/Fitness_Journal/Fitness_Journal.sln
+/Fitness_Journal/package-lock.json
+/Fitness_Journal/ClientApp/package-lock.json
+/Fitness_Journal/appsettings.json
+/Fitness_Journal/appsettings.json

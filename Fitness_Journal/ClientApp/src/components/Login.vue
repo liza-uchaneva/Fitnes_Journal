@@ -43,14 +43,14 @@
           *{{ err.$message }}
         </p>
       </div>
-      <button type="submit" class="form__button">Submit</button>
+      <button type="submit" class="form__button">Sign Up</button>
     </form>
     <img
       class="login__img"
       src="../assets/picture/login.webp"
       alt="active people"
     />
-    <div>
+    <div class="login__text">
       New to us?
       <router-link to="/signup">Sign up now</router-link>
     </div>
