@@ -2,12 +2,18 @@ import { createRouter, createWebHistory } from "vue-router";
 import Onboarding from "../pages/OnboardingPage.vue";
 import Login from "../pages/Login.vue";
 import SignUp from "../pages/SignUp.vue";
+import forgotPassword from "../pages/ForgotPasswordPage.vue";
 
 const routes = [
   {
     path: "/",
     name: "onboarding",
     component: Onboarding,
+  },
+  {
+    path: "/forgotPassword",
+    name: "forgotPassword",
+    component: forgotPassword,
   },
   {
     path: "/login",

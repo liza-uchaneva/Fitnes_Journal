@@ -43,6 +43,9 @@
           *{{ err.$message }}
         </p>
       </div>
+      <a class="form__link">
+        <router-link to="/forgotPassword"> Forgot password?</router-link>
+      </a>
       <button type="submit" class="form__button">Sign Up</button>
     </form>
     <img

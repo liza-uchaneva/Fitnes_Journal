@@ -1,0 +1,37 @@
+.form {
+  padding-top: 195px;
+  background-image: url(../picture/Fon.webp);
+  @include flexColumnCenter(0);
+
+  &__title {
+    color: $colorTextMain;
+    margin-bottom: 30px;
+  }
+  &__input_box {
+    width: 100%;
+  }
+  &__input_signUp {
+    height: 50px;
+    width: 100%;
+    margin-bottom: 24px;
+    border: none;
+    border-bottom: 1px solid $colorTextMain;
+    width: 100%;
+    padding: 5px;
+  }
+
+  &__input_signUp::placeholder {
+    color: $colorTextMain;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  &__button_submit {
+    @include buttonMain($colorGreen);
+  }
+}
+.signUp__Wrap {
+  width: 100%;
+  @include flexColumnCenter(0);
+  margin-bottom: 186px;
+}
