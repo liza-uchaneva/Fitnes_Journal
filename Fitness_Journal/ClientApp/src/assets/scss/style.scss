@@ -1,0 +1,40 @@
+@import "../scss/vars";
+@import "../scss/mixin";
+@import "../scss/login";
+@import "../scss/onboarding";
+@import "../scss/signUp";
+@import "../scss/forgotPassword";
+@import "../fonts/stylesheet.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  //   font-family: $fontFamilyMain;
+  //   color: $colorWhite;
+  box-sizing: border-box;
+}
+
+html {
+  // background-color: $colorMain;
+  scroll-behavior: smooth;
+  font-family: $textFontFamily;
+  background-image: url(../picture/Fon.webp);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  list-style-type: none;
+}
+
+.center {
+  padding-left: calc(50% - $siteWidth / 2);
+  padding-right: calc(50% - $siteWidth / 2);
+}

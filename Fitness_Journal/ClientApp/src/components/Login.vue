@@ -83,16 +83,15 @@
                         localStorage.setItem('accessToken', responce.data.accessToken);
 
                         this.$router.replace({ path: '/home' });
-                    } catch (error) {
+        } catch (error) {
                         const er = error.response + this.mes;
                         console.error('Error:', er);
-                    }
-                    this.visible.value = true;
-                    this.resetForm();
-                    this.v$.$reset();
-                }
-            },
         }
-    };
+        this.visible.value = true;
+        this.resetForm();
+        this.v$.$reset();
+      }
+    },
+  },
+};
 </script>
-

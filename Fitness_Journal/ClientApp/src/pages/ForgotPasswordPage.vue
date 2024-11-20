@@ -1,13 +1,13 @@
 <template>
-  <Login />
+  <ForgotPassword />
 </template>
 
 <script>
-import Login from "../components/Login.vue";
+import ForgotPassword from "@/components/ForgotPassword.vue";
 
 export default {
   components: {
-    Login,
+    ForgotPassword,
   },
 };
 </script>
