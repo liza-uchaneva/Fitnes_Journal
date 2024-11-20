@@ -1,0 +1,48 @@
+/Fitness_Journal/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+node_modules/
+#Ignore thumbnails created by Windows
+Thumbs.db
+#Ignore files built by Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+.vs/
+#Nuget packages folder
+packages/
+bin/
+<<<<<<< HEAD
+/Fitness_Journal/ClientApp/package-lock.json
+/package-lock.json
+/Fitness_Journal/Fitness_Journal.sln
+/Fitness_Journal/package-lock.json
+/Fitness_Journal/ClientApp/package-lock.json
+/Fitness_Journal/appsettings.json
+/Fitness_Journal/appsettings.json
+/Fitness_Journal/appsettings.json
+=======
+/.idea/.idea.Fitness_Journal/.idea/.gitignore
+/.idea/.idea.Fitness_Journal/.idea/indexLayout.xml
+/.idea/.idea.Fitness_Journal/.idea/vcs.xml
+>>>>>>> fa439226f2fc5f0d00d335d1edb0762930969b46
