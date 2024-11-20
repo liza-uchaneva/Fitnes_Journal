@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../pages/Login.vue'
 import SignUp from '../pages/SignUp.vue'
 import Main from '../pages/Main.vue'
-import Personal_info from '../pages/Personal_information.vue'
 
 
 
@@ -22,11 +21,6 @@ const routes = [
         path: "/home",
         name: "home",
         component: Main,
-    },
-    {
-        path: "/personal_info",
-        name: "personal_info",
-        component: Personal_info,
     },
 ];
 
