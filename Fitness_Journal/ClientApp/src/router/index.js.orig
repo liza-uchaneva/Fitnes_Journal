@@ -1,9 +1,9 @@
+<<<<<<< HEAD
 import { createRouter, createWebHistory } from "vue-router";
 import Onboarding from "../pages/OnboardingPage.vue";
 import Login from "../pages/Login.vue";
-import Main from '../pages/Main.vue'
-import Personal_info from '../pages/Personal_information.vue'
-
+import SignUp from "../pages/SignUp.vue";
+import forgotPassword from "../pages/ForgotPasswordPage.vue";
 
 const routes = [
   {
@@ -25,6 +25,27 @@ const routes = [
     path: "/signup",
     name: "signup",
     component: SignUp,
+  },
+=======
+import { createRouter, createWebHistory } from 'vue-router'
+import Login from '../pages/Login.vue'
+import SignUp from '../pages/SignUp.vue'
+import Main from '../pages/Main.vue'
+import Personal_info from '../pages/Personal_information.vue'
+
+
+
+
+const routes = [
+    {
+        path: "/",
+        name: "login",
+        component: Login,
+    },
+    {
+        path: "/signup",
+        name: "signup",
+        component: SignUp,
     },
     {
         path: "/home",
@@ -35,7 +56,8 @@ const routes = [
         path: "/personal_info",
         name: "personal_info",
         component: Personal_info,
-  },
+    },
+>>>>>>> 8e827099d1b6aee7a9fe60b8dfba108dee7e3f82
 ];
 
 const router = createRouter({
