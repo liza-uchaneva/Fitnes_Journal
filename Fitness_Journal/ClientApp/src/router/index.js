@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Onboarding from "../pages/OnboardingPage.vue";
 import Login from "../pages/Login.vue";
-import Main from '../pages/Main.vue'
+import Main from '../pages/Main.vue';
+import forgotPassword from "../pages/ForgotPasswordPage.vue";
+import SignUp from "../pages/Signup.vue";
+
+
 
 
 const routes = [
@@ -30,11 +34,6 @@ const routes = [
         name: "home",
         component: Main,
     },
-    {
-        path: "/personal_info",
-        name: "personal_info",
-        component: Personal_info,
-  },
 ];
 
 const router = createRouter({

@@ -12,7 +12,6 @@
            class="calendar-day"
            :class="{
                     'current-day': isToday(day),
-                    'current-day': isToday(day),
                     'workout-day': isWorkoutDay(day),
                     'selected-day': day.isSame(selectedDay, 'day')
                 }"
@@ -21,10 +20,9 @@
         <span>{{ day.format("D") }}</span>
       </div>
     </div>
+    <button class ="form__button"@click="this.AddWorkout()">Add workout</button>
   </div>
-  <button @click="AddWorkout()">Add workout</button>
-  <GoalSetUp v-if="isGoalSet"></GoalSetUp>
-</template>
+  <GoalSetUp v-if="isGoalSet" @goal-set="hideGoalSetUp"></GoalSetUp></template>
 
 <script>
 import axios from 'axios';
@@ -56,7 +54,10 @@ export default {
     this.getCurrentWeek();
   },
   methods: {
-
+    hideGoalSetUp() {
+      this.isGoalSet = false;
+      this.getWeeklyGoal();
+    },
     isToday(day) {
       return day.isSame(dayjs(), 'day');
     },
@@ -121,16 +122,18 @@ export default {
         });
 
         if (response.ok) {
-          if (response.status === 204) this.isGoalSet = true;
+          if (response.status === 204) {
+            this.isGoalSet = true;
+            return;
+          }
 
           const data = await response.json();
           this.goal = data;
-          if (data === 0) this.$router.replace({path: '/personal_info'});
-
+          if (data === 0) this.$router.replace({ path: '/personal_info' });
         } else {
           console.error('Failed to fetch weekly goal:', response.statusText);
           if (response.statusText === 'Unauthorized') {
-            this.$router.replace({path: '/'});
+            this.$router.replace({ path: '/' });
           }
         }
       } catch (error) {
@@ -148,8 +151,7 @@ export default {
 
         if (response.ok) {
           const responseText = await response.text();
-          const data = JSON.parse(responseText);
-          this.workouts = data;
+          this.workouts = JSON.parse(responseText);
         } else {
           console.error('Failed to fetch workouts:', response.statusText);
         }
@@ -173,7 +175,7 @@ export default {
         };
 
         const response = await axios.post(`/api/user/workout`, bodyParameters, config);
-        this.loadWorkouts();
+        await this.loadWorkouts();
       } catch (error) {
         console.error('Error:', error);
       }
@@ -188,6 +190,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 20px;
 }
 
 .calendar-days {

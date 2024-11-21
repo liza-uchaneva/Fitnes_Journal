@@ -1,5 +1,5 @@
 <template>
-  <div class = 'goalSetUp'>
+  <div class='goalSetUp'>
     <form @submit.prevent="SetWeeklyGoal">
       <h3 class="form__title">Almost there!</h3>
       <h4>Commit weekly goal to make steady progress</h4>
@@ -19,75 +19,77 @@
 </template>
 
 <script>
-    import axios from 'axios';
-    import { reactive, computed, ref } from 'vue';
+import axios from 'axios';
+import {reactive, computed, ref} from 'vue';
 
-    export default {
-      data(){
-       return {
-       } 
-      },
-        setup() {
-            const weeklyGoal = ref(3);
+export default {
+  data() {
+    return {}
+  },
+  setup() {
+    const weeklyGoal = ref(3);
 
-            const goalMessage = computed(() => {
-                if (weeklyGoal.value < 3) {
-                    return "A little goes a long way! Let's keep it steady.";
-                } else if (weeklyGoal.value <= 5) {
-                    return "Great choice! Consistency is key to progress.";
-                } else {
-                    return "You're on fire! Aim high and achieve more!";
-                }
-            });
+    const goalMessage = computed(() => {
+      if (weeklyGoal.value < 3) {
+        return "A little goes a long way! Let's keep it steady.";
+      } else if (weeklyGoal.value <= 5) {
+        return "Great choice! Consistency is key to progress.";
+      } else {
+        return "You're on fire! Aim high and achieve more!";
+      }
+    });
 
-            return {
-                weeklyGoal,
-                goalMessage,
-            };
-        },
-
-        methods: {
-            async SetWeeklyGoal() {
-                try {
-                    const config = {
-                        headers: {
-                            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-                            'Content-Type': 'application/json',
-                        },
-                    };
-
-                    const bodyParameters = {
-                        profileId: localStorage.getItem('profileId'),
-                        weeklyGoal: this.weeklyGoal,
-                    };
-
-                    const response = await axios.post(`/api/user/setweeklygoal`, bodyParameters, config);
-                    this.isGoalSet = true;
-                } catch (error) {
-                    const er = error.response;
-                    console.error('Error:', er);
-                }
-            },
-        },
+    return {
+      weeklyGoal,
+      goalMessage,
     };
+  },
+
+  methods: {
+    async SetWeeklyGoal() {
+      try {
+        const config = {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+            'Content-Type': 'application/json',
+          },
+        };
+
+        const bodyParameters = {
+          profileId: localStorage.getItem('profileId'),
+          weeklyGoal: this.weeklyGoal,
+        };
+
+        const response = await axios.post(`/api/user/setweeklygoal`, bodyParameters, config);
+        if (response.status === 200 || response.status === 201) {
+          // Emit the event to notify the parent
+          this.$emit('goal-set');
+        }
+      } catch (error) {
+        console.error('Error:', error.response);
+      }
+    },
+  },
+};
 </script>
 <style scoped>
-    .form__input_goal {
-        display: flex;
-        flex-direction: column;
-    }
-    .goalSetUp{
-      background-color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 99;
-    }
+.form__input_goal {
+  display: flex;
+  flex-direction: column;
+}
+
+.goalSetUp {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+}
 </style>
 
 
