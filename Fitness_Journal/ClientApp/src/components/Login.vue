@@ -1,38 +1,40 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <form @submit.prevent="onSend">
-        <h3 class="form__title">Welcome back</h3>
-        <div class="form__input_box">
-            <label class="form__label">Email </label>
-            <input v-model.trim="user.email"
-                   :class="{ 'form__input_hasError': (v$.email.$invalid && v$.email.$dirty) }"
-                   class="form__input"
-                   type="text"
-                   name="email" />
-            <p class="form__error_message"
-               v-for="err in v$.email.$errors"
-               :key="err.$uid">
-                *{{ err.$message }}
-            </p>
-        </div>
-        <div class="form__input_box">
-            <label class="form__label">Password </label>
-            <input v-model.trim="user.password"
-                   :class="{ 'form__input_hasError': (v$.password.$invalid && v$.password.$dirty) }"
-                   class="form__input"
-                   type="password"
-                   name="password" />
-            <p class="form__error_message"
-               v-for="err in v$.password.$errors"
-               :key="err.$uid">
-                *{{ err.$message }}
-            </p>
-        </div>
-        <button type="submit" class="form__button">Submit</button>
+  <section class = "center">
+    <form @submit.prevent="onSend" class = "center form">
+      <h3 class="form__title">Welcome back</h3>
+      <div class="form__input_box">
+        <label class="form__label">Email </label>
+        <input v-model.trim="user.email"
+               :class="{ 'form__input_hasError': (v$.email.$invalid && v$.email.$dirty) }"
+               class="form__input"
+               type="text"
+               name="email" />
+        <p class="form__error_message"
+           v-for="err in v$.email.$errors"
+           :key="err.$uid">
+          *{{ err.$message }}
+        </p>
+      </div>
+      <div class="form__input_box">
+        <label class="form__label">Password </label>
+        <input v-model.trim="user.password"
+               :class="{ 'form__input_hasError': (v$.password.$invalid && v$.password.$dirty) }"
+               class="form__input"
+               type="password"
+               name="password" />
+        <p class="form__error_message"
+           v-for="err in v$.password.$errors"
+           :key="err.$uid">
+          *{{ err.$message }}
+        </p>
+      </div>
+      <button type="submit" class="form__button">Submit</button>
     </form>
     <div>
-        New to us? <router-link to="/signup">Sign up</router-link> now
+      New to us? <router-link to="/signup">Sign up</router-link> now
     </div>
+  </section>
 </template>
 
 <script>

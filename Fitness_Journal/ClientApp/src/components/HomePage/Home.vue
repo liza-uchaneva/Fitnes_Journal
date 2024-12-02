@@ -1,29 +1,33 @@
 <template>
-  <div class="progress-container">
-    <span>{{ weekProgress }} / {{ goal }}</span>
-
-    <progress id="bar" :max="goal" :value="weekProgress"></progress>
-  </div>
-  <div class="calendar-week">
-    <h2>{{ monthTitle }}</h2>
-    <div class="calendar-days">
-      <div v-for="(day, index) in currentWeek"
-           :key="index"
-           class="calendar-day"
-           :class="{
+  <section class="center">
+    <div>
+      <h1>Hi <span>{{ name }}</span> </h1>
+    </div>
+    <div class="progress-container">
+      <span>{{ weekProgress }} / {{ goal }}</span>
+      <progress id="bar" :max="goal" :value="weekProgress"></progress>
+    </div>
+    <div class="calendar-week">
+      <h2>{{ monthTitle }}</h2>
+      <div class="calendar-days">
+        <div v-for="(day, index) in currentWeek"
+             :key="index"
+             class="calendar-day"
+             :class="{
                     'current-day': isToday(day),
                     'workout-day': isWorkoutDay(day),
                     'selected-day': day.isSame(selectedDay, 'day')
                 }"
-           @click="selectDay(day)">
-        <span>{{ day.format("ddd") }}</span>
-        <span>{{ day.format("D") }}</span>
+             @click="selectDay(day)">
+          <span>{{ day.format("ddd") }}</span>
+          <span>{{ day.format("D") }}</span>
+        </div>
       </div>
+      <button class="form__button" @click="this.AddWorkout()">Add workout</button>
     </div>
-    <button class ="form__button"@click="this.AddWorkout()">Add workout</button>
-  </div>
-  <GoalSetUp v-if="isGoalSet" @goal-set="hideGoalSetUp"></GoalSetUp></template>
-
+    <GoalSetUp v-if="isGoalSet" @goal-set="hideGoalSetUp"></GoalSetUp>
+  </section>
+</template>
 <script>
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -35,7 +39,7 @@ export default {
   },
   data() {
     return {
-      profileId: null,
+      name: "user",
       workouts: [],
       checkedDays: [],
       currentWeek: [],
@@ -48,7 +52,7 @@ export default {
   },
   async mounted() {
     await this.getWeeklyGoal();
-
+    await this.getUserName();
     await this.getProfileId();
     await this.loadWorkouts();
     this.getCurrentWeek();
@@ -88,7 +92,29 @@ export default {
 
       this.monthTitle = today.format('MMMM');
     },
+    async getUserName() {
+      try {
+        const response = await fetch(`/api/user/name`, {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+          },
+        });
 
+        if (response.ok) {
+          const data = await response.json();
+          this.name = data;
+
+        } else {
+          console.error('Failed to fetch name:', response.statusText);
+          if (response.statusText === 'Unauthorized') {
+            this.$router.replace({path: '/'});
+          }
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
     async getProfileId() {
       try {
         const response = await fetch(`/api/user/profileId`, {
@@ -129,11 +155,11 @@ export default {
 
           const data = await response.json();
           this.goal = data;
-          if (data === 0) this.$router.replace({ path: '/personal_info' });
+          if (data === 0) this.$router.replace({path: '/personal_info'});
         } else {
           console.error('Failed to fetch weekly goal:', response.statusText);
           if (response.statusText === 'Unauthorized') {
-            this.$router.replace({ path: '/' });
+            this.$router.replace({path: '/'});
           }
         }
       } catch (error) {
@@ -254,4 +280,5 @@ progress::-moz-progress-bar {
 </style>
 
 
-
+<script setup lang="ts">
+</script>

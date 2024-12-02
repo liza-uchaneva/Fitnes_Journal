@@ -24,7 +24,29 @@ namespace Fitness_Journal.Controllers
             _context = context;
             _userManager = userManager;
         }
-
+        // GET: api/user/name
+        [Authorize]
+        [HttpGet("/user/name")]
+        public async Task<ActionResult<int>> GetUserName()
+        {
+            var IdentUser = await _userManager.GetUserAsync(User);
+            if (IdentUser != null)
+            {
+                var user = _context.Users.FirstOrDefault(u => u.Email == IdentUser.Email);
+                if(user !=null)
+                {
+                    return Ok(user.UserName);
+                }
+                else
+                {
+                    return NotFound("User id not found.");
+                }
+            }
+            else
+            {
+                return NotFound("Profile not found.");
+            }
+        }
         // GET: api/user/profileId
         [Authorize]
         [HttpGet("/user/profileId")]
@@ -89,15 +111,15 @@ namespace Fitness_Journal.Controllers
         [HttpPost("/user/workout")]
         public async Task<ActionResult<WorkoutCreateResult>> PostWorkout(CreateWorkoutModel createWorkoutModel)
         {
-            var workoutmodel = createWorkoutModel;
+            var workoutModel = createWorkoutModel;
 
-            var profile = await _context.Profiles.FindAsync(workoutmodel.ProfileId);
+            var profile = await _context.Profiles.FindAsync(workoutModel.ProfileId);
             if (profile == null)
             {
                 return NotFound("Profile not found.");
             }
 
-            if (await WorkoutExistsAsync(workoutmodel.WorkoutDateTime, workoutmodel.ProfileId))
+            if (await WorkoutExistsAsync(workoutModel.WorkoutDateTime, workoutModel.ProfileId))
             {
                 return Conflict("A workout with the specified date and time already exists.");
             }
@@ -105,8 +127,8 @@ namespace Fitness_Journal.Controllers
             var workout = new Workout
             {
                 Profile = profile,
-                ProfileId = workoutmodel.ProfileId,
-                WorkoutDateTime = workoutmodel.WorkoutDateTime,
+                ProfileId = workoutModel.ProfileId,
+                WorkoutDateTime = workoutModel.WorkoutDateTime,
             };
 
             _context.Workouts.Add(workout);
@@ -115,7 +137,7 @@ namespace Fitness_Journal.Controllers
             return new WorkoutCreateResult()
             {
                 WorkoutId = workout.WorkoutId,
-                WorkoutDateTime = workoutmodel.WorkoutDateTime
+                WorkoutDateTime = workoutModel.WorkoutDateTime
             };
         }
 

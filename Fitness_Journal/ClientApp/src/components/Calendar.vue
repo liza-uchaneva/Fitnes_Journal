@@ -1,28 +1,40 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div class="calendar-month">
-    <h2>{{ monthTitle }}</h2>
-    <div class="calendar-grid">
-      <div v-for="(weekday, index) in weekdays" :key="'header-' + index" class="calendar-header">
-        {{ weekday }}
-      </div>
-      <div v-for="n in firstDayOffset" :key="'placeholder-' + n" class="calendar-placeholder"></div>
-      <div
-          v-for="(day, index) in currentMonth"
-          :key="index"
-          class="calendar-day"
-          :class="{
-          'current-day': isToday(day),
-          'workout-day': isWorkoutDay(day),
-          'selected-day': day.isSame(selectedDay, 'day')
-        }"
-          @click="selectDay(day)"
-      >
-        {{ day.format('D') }}
+  <section class="center">
+    <div class = "total">
+      <h1>{{ workouts.length }}</h1>
+      <p>Total workouts</p>
+    </div>
+    <div class="calendar">
+      <div class="calendar-month">
+        <div class="month-slider">
+          <button @click="changeMonth(-1)" class="slider-button">‹</button>
+          <h2>{{ monthTitle }}</h2>
+          <button @click="changeMonth(1)" class="slider-button">›</button>
+        </div>
+        <div class="calendar-grid">
+          <div v-for="(weekday, index) in weekdays" :key="'header-' + index" class="calendar-header">
+            {{ weekday }}
+          </div>
+          <div v-for="n in firstDayOffset" :key="'placeholder-' + n" class="calendar-placeholder"></div>
+          <div
+              v-for="(day, index) in currentMonth"
+              :key="index"
+              class="calendar-day"
+              :class="{
+            'current-day': isToday(day),
+            'workout-day': isWorkoutDay(day), 
+            'selected-day': day.isSame(selectedDay, 'day')
+          }"
+              @click="selectDay(day)"
+          >
+            {{ day.format('D') }}
+          </div>
+        </div>
+        <button class="form__button" @click="addWorkout">Add Workout</button>
       </div>
     </div>
-    <button class="form__button" @click="addWorkout">Add Workout</button>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -37,6 +49,7 @@ export default {
       monthTitle: "",
       weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       firstDayOffset: 0,
+      currentDate: dayjs(),
     };
   },
   mounted() {
@@ -56,14 +69,18 @@ export default {
       }
     },
     getCurrentMonth() {
-      const startOfMonth = dayjs().startOf("month");
-      const daysInMonth = dayjs().daysInMonth();
-      this.firstDayOffset = (startOfMonth.day() + 6) % 7; 
+      const startOfMonth = this.currentDate.startOf("month");
+      const daysInMonth = this.currentDate.daysInMonth();
+      this.firstDayOffset = (startOfMonth.day() + 6) % 7;
 
-      this.currentMonth = Array.from({ length: daysInMonth }, (_, i) =>
+      this.currentMonth = Array.from({length: daysInMonth}, (_, i) =>
           startOfMonth.add(i, "day")
       );
-      this.monthTitle = dayjs().format("MMMM YYYY");
+      this.monthTitle = this.currentDate.format("MMMM YYYY");
+    },
+    changeMonth(offset) {
+      this.currentDate = this.currentDate.add(offset, "month");
+      this.getCurrentMonth();
     },
     async loadWorkouts() {
       try {
@@ -91,6 +108,7 @@ export default {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            profileId: localStorage.getItem("profileId"),
             workoutDateTime: this.selectedDay.format(),
           }),
         });
@@ -108,43 +126,73 @@ export default {
 </script>
 
 <style scoped>
+.calendar {
+  background: #f8f9fa;
+}
+
 .calendar-month {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
 }
+
+.month-slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.slider-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
   width: 100%;
 }
+
 .calendar-header {
   font-weight: bold;
   text-align: center;
   padding: 5px 0;
 }
+
 .calendar-placeholder {
   visibility: hidden;
 }
+
 .calendar-day {
   padding: 10px;
   text-align: center;
-  border: 1px solid #ddd;
   border-radius: 4px;
 }
+
 .current-day {
   font-weight: bold;
   border: 2px solid black;
 }
+
 .workout-day {
   background-color: #f0f8ff;
 }
+
 .selected-day {
   border: 2px solid blue;
 }
+.total{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 </style>
+
 
 
 

@@ -7,7 +7,7 @@
         courses organised for your convenience
       </p>
       <button class="onboarding__button">
-        <router-link to="/login">Get Started Now</router-link>
+        <router-link to="/login">Get Started</router-link>
       </button>
       <img
         class="onboarding__img"
