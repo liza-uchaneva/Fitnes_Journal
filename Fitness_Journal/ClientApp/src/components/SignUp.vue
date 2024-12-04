@@ -1,6 +1,6 @@
 <template>
-  <section class = center>
-    <form class="center form" @submit.prevent="register">
+  <section class = "center">
+    <form class="form" @submit.prevent="register">
       <h3 class="form__title">Create account</h3>
 
       <div class="form__input_box">
@@ -72,12 +72,11 @@
       </div>
 
       <button type="submit" class="form__button_submit">Submit</button>
+      <div class="center signUp__Wrap">
+        Already have an account?
+        <router-link to="/">Sign in here</router-link>
+      </div>
     </form>
-
-    <div class="center signUp__Wrap">
-      Already have an account?
-      <router-link to="/">Sign in here</router-link>
-    </div>
   </section>
 </template>
 
@@ -126,7 +125,7 @@ export default {
       if (!this.v$.$invalid) {
         try {
           await axios.post("api/register", {
-            name: this.user.username,
+            username: this.user.username,
             email: this.user.email,
             password: this.user.password,
           });

@@ -2,10 +2,18 @@
 <template>
     <nav class="bottom-nav">
       <button @click="navigateTo('home')" class="nav-button">
-        <span>🏠</span>
+        <img
+            class="nav-button"
+            src="../assets/picture/icons/home-icon.png"
+            alt="the man is running"
+        />
       </button>
       <button @click="navigateTo('calendar')" class="nav-button">
-        <span>📅</span>
+        <img
+            class="nav-button"
+            src="../assets/picture/icons/calendar-icon.png"
+            alt="the man is running"
+        />
       </button>
     </nav>
 </template>
@@ -27,6 +35,7 @@ export default {
   left: 0;
   width: 100%;
   height: 60px;
+  border-radius: 15px;
   background: #f8f9fa;
   display: flex;
   justify-content: space-around;
@@ -43,6 +52,8 @@ export default {
   background: none;
   border: none;
   font-size: 16px;
+  max-width: 27px;
+  max-height: 27px;
   cursor: pointer;
   color: #495057;
 }

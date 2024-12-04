@@ -127,7 +127,7 @@ export default {
 
 <style scoped>
 .calendar {
-  background: #f8f9fa;
+  background: #ffffff;
 }
 
 .calendar-month {
@@ -135,6 +135,7 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  padding: 20px;
 }
 
 .month-slider {
@@ -163,28 +164,6 @@ export default {
   padding: 5px 0;
 }
 
-.calendar-placeholder {
-  visibility: hidden;
-}
-
-.calendar-day {
-  padding: 10px;
-  text-align: center;
-  border-radius: 4px;
-}
-
-.current-day {
-  font-weight: bold;
-  border: 2px solid black;
-}
-
-.workout-day {
-  background-color: #f0f8ff;
-}
-
-.selected-day {
-  border: 2px solid blue;
-}
 .total{
   display: flex;
   flex-direction: column;

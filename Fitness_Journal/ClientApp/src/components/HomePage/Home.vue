@@ -1,11 +1,18 @@
 <template>
   <section class="center">
     <div>
-      <h1>Hi <span>{{ name }}</span> </h1>
+      <h1>Hi <span>{{ name }}</span></h1>
     </div>
     <div class="progress-container">
-      <span>{{ weekProgress }} / {{ goal }}</span>
-      <progress id="bar" :max="goal" :value="weekProgress"></progress>
+      <div
+          id="bar"
+          role="progressbar"
+          :aria-valuenow="{ weekProgressInProcents }"
+          aria-valuemin="0"
+          :aria-valuemax="100"
+          :style="{ '--value': weekProgressInProcents }"
+      ></div>
+      
     </div>
     <div class="calendar-week">
       <h2>{{ monthTitle }}</h2>
@@ -23,7 +30,7 @@
           <span>{{ day.format("D") }}</span>
         </div>
       </div>
-      <button class="form__button" @click="this.AddWorkout()">Add workout</button>
+      <button class="form__button" @click="this.postWorkout()">Add workout</button>
     </div>
     <GoalSetUp v-if="isGoalSet" @goal-set="hideGoalSetUp"></GoalSetUp>
   </section>
@@ -39,13 +46,14 @@ export default {
   },
   data() {
     return {
-      name: "user",
+      name: '',
       workouts: [],
       checkedDays: [],
       currentWeek: [],
       selectedDay: null,
       goal: 7,
       weekProgress: 0,
+      weekProgressInProcents: 0,
       monthTitle: '',
       isGoalSet: false,
     };
@@ -54,18 +62,18 @@ export default {
     await this.getWeeklyGoal();
     await this.getUserName();
     await this.getProfileId();
-    await this.loadWorkouts();
-    this.getCurrentWeek();
+    await this.getWorkouts();
+    this.setCurrentWeek();
   },
   methods: {
     hideGoalSetUp() {
       this.isGoalSet = false;
       this.getWeeklyGoal();
     },
+    
     isToday(day) {
       return day.isSame(dayjs(), 'day');
     },
-
     isWorkoutDay(day) {
       const res = this.workouts.some(workout =>
           day.isSame(dayjs(workout), 'day')
@@ -73,6 +81,7 @@ export default {
       if (res && !this.checkedDays.includes(day.format('YYYY-MM-DD'))) {
         this.weekProgress++;
         this.checkedDays.push(day.format('YYYY-MM-DD'));
+        this.weekProgressInProcents = this.weekProgress * 100 / this.goal;
       }
       return res;
     },
@@ -82,8 +91,7 @@ export default {
         this.selectedDay = day;
       }
     },
-
-    getCurrentWeek() {
+    setCurrentWeek() {
       const today = dayjs();
       const startOfWeek = today.startOf('week').day(0);
       this.currentWeek = Array.from({length: 7}, (_, i) =>
@@ -92,6 +100,7 @@ export default {
 
       this.monthTitle = today.format('MMMM');
     },
+    
     async getUserName() {
       try {
         const response = await fetch(`/api/user/name`, {
@@ -103,8 +112,7 @@ export default {
 
         if (response.ok) {
           const data = await response.json();
-          this.name = data;
-
+          this.name = JSON.parse(data);
         } else {
           console.error('Failed to fetch name:', response.statusText);
           if (response.statusText === 'Unauthorized') {
@@ -154,7 +162,7 @@ export default {
           }
 
           const data = await response.json();
-          this.goal = data;
+          this.goal = JSON.parse(data);
           if (data === 0) this.$router.replace({path: '/personal_info'});
         } else {
           console.error('Failed to fetch weekly goal:', response.statusText);
@@ -166,7 +174,7 @@ export default {
         console.error('Error:', error);
       }
     },
-    async loadWorkouts() {
+    async getWorkouts() {
       try {
         const response = await fetch(`/api/user/workouts`, {
           method: 'GET',
@@ -186,7 +194,7 @@ export default {
       }
     },
 
-    async AddWorkout() {
+    async postWorkout() {
       try {
         const config = {
           headers: {
@@ -208,77 +216,4 @@ export default {
     },
   },
 };
-</script>
-
-<style scoped>
-
-.calendar-week {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.calendar-days {
-  display: flex;
-  gap: 10px;
-}
-
-.calendar-day {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-}
-
-.current-day {
-  color: #000;
-  font-weight: bold;
-  border: 2px solid black;
-}
-
-.workout-day {
-  background-color: #F1F1F9;
-}
-
-.selected-day {
-  border: 2px solid blue;
-}
-
-.progress-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  display: flex;
-  flex-direction: column;
-}
-
-progress {
-  width: 100%;
-  height: 20px;
-  appearance: none;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-progress::-webkit-progress-bar {
-  background-color: #f3f3f3;
-  border-radius: 5px;
-}
-
-progress::-webkit-progress-value {
-  background-color: #4caf50;
-  border-radius: 5px;
-}
-
-progress::-moz-progress-bar {
-  background-color: #4caf50;
-  border-radius: 5px;
-}
-</style>
-
-
-<script setup lang="ts">
 </script>

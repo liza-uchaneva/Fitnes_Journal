@@ -30,10 +30,10 @@
         </p>
       </div>
       <button type="submit" class="form__button">Submit</button>
+      <div>
+        New to us? <router-link to="/signup">Sign up</router-link> now
+      </div>
     </form>
-    <div>
-      New to us? <router-link to="/signup">Sign up</router-link> now
-    </div>
   </section>
 </template>
 
